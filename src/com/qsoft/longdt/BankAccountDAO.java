@@ -2,7 +2,7 @@ package com.qsoft.longdt;
 
 public class BankAccountDAO {
 
-	public boolean doCreate(String accountNumber) {
+	public boolean doCreate(BankAccountDTO dto) {
 		return false;
 	}
 
