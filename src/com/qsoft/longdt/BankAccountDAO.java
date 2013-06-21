@@ -6,12 +6,12 @@ public class BankAccountDAO {
 		return false;
 	}
 
-	public void doRead() {
-		return;
+	public BankAccountDTO doRead(String accountNumber) {
+		return null;
 	}
 
-	public void doUpdate() {
-		return;
+	public BankAccountDTO doUpdate(TransactionDTO dto) {
+		return null;
 	}
 
 	public void doDelete() {
