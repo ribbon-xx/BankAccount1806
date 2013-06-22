@@ -1,19 +1,18 @@
 package com.qsoft.longdt;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.times;
 
 import java.util.Calendar;
-import java.util.Date;
+import java.util.List;
 
 import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.MockitoAnnotations;
-import org.mockito.internal.verification.Times;
 
 public class BankAccountTest extends TestCase {
 
@@ -68,14 +67,23 @@ public class BankAccountTest extends TestCase {
 
 	@Test
 	public void testDepositUpdateAccount() {
-		ba.deposit("1234567890", 100, "deposit");
-
-		ArgumentCaptor<TransactionDTO> argCaptor = ArgumentCaptor
+		ArgumentCaptor<BankAccountDTO> baCapture = ArgumentCaptor
+				.forClass(BankAccountDTO.class);
+		ArgumentCaptor<TransactionDTO> tranCapture = ArgumentCaptor
 				.forClass(TransactionDTO.class);
-		verify(baDAO, times(1)).doUpdate(argCaptor.capture());
-		assertEquals(argCaptor.getValue().getAmount(), 100, 0.01);
-		assertEquals(argCaptor.getValue().getAccountNumber(), "1234567890");
-		assertTrue(argCaptor.getValue().getTimestamp() != 0);
+
+		BankAccountDTO baDTO = ba.openAccount("1234567890", 0);
+
+		ba.deposit(baDTO.getAccountNumber(), 100, "desc");
+
+		verify(baDAO, times(1)).doCreate(baCapture.capture());
+		List<BankAccountDTO> listBA = baCapture.getAllValues();
+		assertEquals(listBA.get(0).getBalance(), 0.0, 0.01);
+
+		verify(baDAO, times(1)).doUpdate(tranCapture.capture());
+		assertEquals(tranCapture.getValue().getAmount(), 100.0, 0.01);
+		assertEquals(tranCapture.getValue().getAccountNumber(), "1234567890");
+		assertTrue(tranCapture.getValue().getTimestamp() != 0);
 	}
 
 }
