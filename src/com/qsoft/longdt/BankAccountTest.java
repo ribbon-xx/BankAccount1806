@@ -86,6 +86,7 @@ public class BankAccountTest extends TestCase {
 	@Test
 	public void testWithDrawUpdateAccount() {
 		String accNumber = "12345567890";
+		double amount = 50d;
 
 		BankAccountDTO baDTO = ba.openAccount(accNumber, 100);
 
@@ -95,10 +96,14 @@ public class BankAccountTest extends TestCase {
 		ArgumentCaptor<TransactionDTO> withdrawCapture = ArgumentCaptor
 				.forClass(TransactionDTO.class);
 
-		when(ba.getAccount(accNumber)).thenReturn(baDTO);
+		when(
+				baDAO.doUpdate(new TransactionDTO(accNumber, amount, "des",
+						111111d))).thenReturn(
+				new BankAccountDTO(baDTO.getAccountNumber(), baDTO.getBalance()
+						- amount, 111111d));
 
-		BankAccountDTO baDTOUpdated = ba.withdraw(baDTO.getAccountNumber(), -50,
-				"desc");
+		BankAccountDTO baDTOUpdated = ba.withdraw(baDTO.getAccountNumber(),
+				50, "desc");
 
 		verify(baDAO, times(1)).doCreate(openCapture.capture());
 		assertEquals(openCapture.getValue().getBalance(), 100f, 0.01);
@@ -108,6 +113,11 @@ public class BankAccountTest extends TestCase {
 
 		assertEquals(50f, baDTOUpdated.getBalance(), 0.01);
 
+	}
+
+	@Test
+	public void testWithDrawSaveToDatabase() {
+		String accNumber = "12345567890";
 	}
 
 }

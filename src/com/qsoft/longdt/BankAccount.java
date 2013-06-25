@@ -36,11 +36,9 @@ public class BankAccount {
 
 	public BankAccountDTO withdraw(String accountNumber, long amount,
 			String description) {
-		BankAccountDTO baDTO = getAccount(accountNumber);
-		TransactionDTO tranDTO = new TransactionDTO(baDTO.getAccountNumber(),
-				baDTO.getBalance() - amount, description, Calendar
-						.getInstance().getTimeInMillis());
-		return baDAO.doUpdate(tranDTO);
+		// TransactionDTO tranDTO = new TransactionDTO(accountNumber, amount,
+		// description, Calendar.getInstance().getTimeInMillis());
+		return baDAO.doUpdate(new TransactionDTO(accountNumber, amount,
+				description, Calendar.getInstance().getTimeInMillis()));
 	}
-
 }
