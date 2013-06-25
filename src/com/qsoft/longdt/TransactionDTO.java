@@ -3,16 +3,16 @@ package com.qsoft.longdt;
 public class TransactionDTO {
 
 	private String accountNumber;
-	private long amount;
+	private double amount;
 	private String description;
-	private long timestamp;
+	private double timestamp;
 
 	public TransactionDTO() {
 		super();
 	}
 
-	public TransactionDTO(String accountNumber, long amount,
-			String description, long timestamp) {
+	public TransactionDTO(String accountNumber, double amount,
+			String description, double timestamp) {
 		super();
 		this.accountNumber = accountNumber;
 		this.amount = amount;
@@ -28,11 +28,11 @@ public class TransactionDTO {
 		this.accountNumber = accountNumber;
 	}
 
-	public long getAmount() {
+	public double getAmount() {
 		return amount;
 	}
 
-	public void setAmount(long amount) {
+	public void setAmount(double amount) {
 		this.amount = amount;
 	}
 
@@ -44,11 +44,11 @@ public class TransactionDTO {
 		this.description = description;
 	}
 
-	public long getTimestamp() {
+	public double getTimestamp() {
 		return timestamp;
 	}
 
-	public void setTimestamp(long timestamp) {
+	public void setTimestamp(double timestamp) {
 		this.timestamp = timestamp;
 	}
 

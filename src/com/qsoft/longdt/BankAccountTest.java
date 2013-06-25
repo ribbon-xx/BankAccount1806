@@ -5,7 +5,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Calendar;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -42,21 +41,15 @@ public class BankAccountTest extends TestCase {
 	@Test
 	public void testGetAccountReturnDTO() {
 
-		Calendar cal = mock(Calendar.class);
-		when(cal.getTimeInMillis()).thenReturn(1371798081880l);
+		String accNumber = "12345567890";
+		BankAccountDTO accOpen = ba.openAccount(accNumber, 0);
 
-		BankAccountDTO returnValue = new BankAccountDTO();
-		returnValue.setAccountNumber("12345567890");
-		returnValue.setBalance(0);
-		returnValue.setOpenTimestamp(cal.getTimeInMillis());
+		when(ba.getAccount(accOpen.getAccountNumber())).thenReturn(accOpen);
 
-		when(ba.getAccount("12345567890")).thenReturn(returnValue);
+		BankAccountDTO account = ba.getAccount(accNumber);
 
-		BankAccountDTO account = ba.getAccount("12345567890");
-
-		assertEquals("12345567890", account.getAccountNumber());
+		assertEquals(accNumber, account.getAccountNumber());
 		assertEquals(0d, account.getBalance());
-		assertEquals(1371798081880l, account.getOpenTimestamp());
 	}
 
 	@Test
@@ -67,12 +60,16 @@ public class BankAccountTest extends TestCase {
 
 	@Test
 	public void testDepositUpdateAccount() {
+		String accNumber = "12345567890";
+
 		ArgumentCaptor<BankAccountDTO> baCapture = ArgumentCaptor
 				.forClass(BankAccountDTO.class);
 		ArgumentCaptor<TransactionDTO> tranCapture = ArgumentCaptor
 				.forClass(TransactionDTO.class);
 
-		BankAccountDTO baDTO = ba.openAccount("1234567890", 0);
+		BankAccountDTO baDTO = ba.openAccount(accNumber, 0);
+
+		when(ba.getAccount(accNumber)).thenReturn(baDTO);
 
 		ba.deposit(baDTO.getAccountNumber(), 100, "desc");
 
@@ -82,8 +79,35 @@ public class BankAccountTest extends TestCase {
 
 		verify(baDAO, times(1)).doUpdate(tranCapture.capture());
 		assertEquals(tranCapture.getValue().getAmount(), 100.0, 0.01);
-		assertEquals(tranCapture.getValue().getAccountNumber(), "1234567890");
+		assertEquals(tranCapture.getValue().getAccountNumber(), accNumber);
 		assertTrue(tranCapture.getValue().getTimestamp() != 0);
+	}
+
+	@Test
+	public void testWithDrawUpdateAccount() {
+		String accNumber = "12345567890";
+
+		BankAccountDTO baDTO = ba.openAccount(accNumber, 100);
+
+		ArgumentCaptor<BankAccountDTO> openCapture = ArgumentCaptor
+				.forClass(BankAccountDTO.class);
+
+		ArgumentCaptor<TransactionDTO> withdrawCapture = ArgumentCaptor
+				.forClass(TransactionDTO.class);
+
+		when(ba.getAccount(accNumber)).thenReturn(baDTO);
+
+		BankAccountDTO baDTOUpdated = ba.withdraw(baDTO.getAccountNumber(), -50,
+				"desc");
+
+		verify(baDAO, times(1)).doCreate(openCapture.capture());
+		assertEquals(openCapture.getValue().getBalance(), 100f, 0.01);
+
+		verify(baDAO, times(1)).doUpdate(withdrawCapture.capture());
+		assertEquals(withdrawCapture.getValue().getAmount(), 50f, 0.01);
+
+		assertEquals(50f, baDTOUpdated.getBalance(), 0.01);
+
 	}
 
 }

@@ -3,6 +3,7 @@ package com.qsoft.longdt;
 public class BankAccountDAO {
 
 	public boolean doCreate(BankAccountDTO dto) {
+
 		return false;
 	}
 
@@ -11,7 +12,11 @@ public class BankAccountDAO {
 	}
 
 	public BankAccountDTO doUpdate(TransactionDTO dto) {
-		return null;
+		BankAccountDTO baDTO = new BankAccountDTO();
+		baDTO.setAccountNumber(dto.getAccountNumber());
+		baDTO.setBalance(baDTO.getBalance() + dto.getAmount());
+		baDTO.setOpenTimestamp(1245663576);
+		return baDTO;
 	}
 
 	public void doDelete() {

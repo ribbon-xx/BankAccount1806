@@ -4,14 +4,14 @@ public class BankAccountDTO {
 
 	private String accountNumber;
 	private double balance;
-	private long openTimestamp;
-	
+	private double openTimestamp;
+
 	public BankAccountDTO() {
 		super();
 	}
 
 	public BankAccountDTO(String accountNumber, double balance,
-			long openTimestamp) {
+			double openTimestamp) {
 		super();
 		this.accountNumber = accountNumber;
 		this.balance = balance;
@@ -34,11 +34,11 @@ public class BankAccountDTO {
 		this.balance = balance;
 	}
 
-	public long getOpenTimestamp() {
+	public double getOpenTimestamp() {
 		return openTimestamp;
 	}
 
-	public void setOpenTimestamp(long openTimestamp) {
+	public void setOpenTimestamp(double openTimestamp) {
 		this.openTimestamp = openTimestamp;
 	}
 }
