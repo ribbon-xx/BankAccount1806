@@ -3,32 +3,33 @@ package com.qsoft.longdt;
 import java.util.ArrayList;
 
 public class Transaction {
-	private TransactionDAO transactionDao;
+	private TransactionDAO tDAO;
 
-	public void setTransactionDao(TransactionDAO transactionDao) {
-		this.transactionDao = transactionDao;
+	public void setTransactionDao(TransactionDAO tDAO) {
+		this.tDAO = tDAO;
 	}
 
 	public TransactionDTO createTransaction(String accountNumber, float amount,
 			String description, long timeStamp) {
 		TransactionDTO transactionDTO = new TransactionDTO(accountNumber,
 				amount, description, timeStamp);
-		transactionDao.doUpdate(transactionDTO);
+		tDAO.doUpdate(transactionDTO);
 		return transactionDTO;
 	}
 
 	public ArrayList<TransactionDTO> getTransactionsOccurred(
 			String accountNumber) {
-		return transactionDao.getTransactionsOccurredDao(accountNumber);
+		return tDAO.getTransactionsOccurredDao(accountNumber);
 	}
 
 	public ArrayList<TransactionDTO> getTransactionsOccurred(
 			String accountNumber, long startTime, long stopTime) {
-		return transactionDao.getTransactionsOccurredDao(accountNumber,
-				startTime, stopTime);
+		return tDAO.getTransactionsOccurredDao(accountNumber, startTime,
+				stopTime);
 	}
 
-	public ArrayList<TransactionDTO> getLastTransaction(String accountNumber) {
-		return transactionDao.getLastTransactionDao(accountNumber);
+	public ArrayList<TransactionDTO> getLimitTransactions(String accountNumber,
+			int limit) {
+		return tDAO.getLimitTransactionDao(accountNumber, limit);
 	}
 }

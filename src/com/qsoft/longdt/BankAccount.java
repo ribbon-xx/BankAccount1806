@@ -3,6 +3,7 @@ package com.qsoft.longdt;
 public class BankAccount {
 
 	private BankAccountDAO baDAO;
+	private TransactionDAO tDAO;
 
 	public BankAccountDTO openAccount(String accountNumber) {
 		BankAccountDTO accountDTO = new BankAccountDTO(accountNumber);
@@ -10,9 +11,8 @@ public class BankAccount {
 		return accountDTO;
 	}
 
-	public BankAccount(BankAccountDAO bankAccountDAO) {
+	public BankAccount() {
 		super();
-		baDAO = bankAccountDAO;
 	}
 
 	public void setBankAccountDAO(BankAccountDAO BankAccountDAO) {
@@ -23,11 +23,8 @@ public class BankAccount {
 		return baDAO.getAccountByNumber(accountNumber);
 	}
 
-	public void deposite(BankAccountDTO accountDTO, float amount,
-			String description) {
-		accountDTO.setBalance(accountDTO.getBalance() + amount);
-		accountDTO.setDescription(description);
-		baDAO.doUpdate(accountDTO);
+	public void settDAO(TransactionDAO tDAO) {
+		this.tDAO = tDAO;
 	}
 
 	public void deposite(BankAccountDTO accountDTO, float amount,
@@ -36,6 +33,10 @@ public class BankAccount {
 		accountDTO.setDescription(description);
 		accountDTO.setOpenTimestamp(timeStamp);
 		baDAO.doUpdate(accountDTO);
+		Transaction trans = new Transaction();
+		trans.setTransactionDao(tDAO);
+		trans.createTransaction(accountDTO.getAccountNumber(), amount,
+				description, timeStamp);
 	}
 
 	public void withDraw(BankAccountDTO accountDTO, float amount,
@@ -44,5 +45,10 @@ public class BankAccount {
 		accountDTO.setDescription(description);
 		accountDTO.setOpenTimestamp(timeStamp);
 		baDAO.doUpdate(accountDTO);
+		Transaction trans = new Transaction();
+		trans.setTransactionDao(tDAO);
+		trans.createTransaction(accountDTO.getAccountNumber(), amount,
+				description, timeStamp);
 	}
+
 }

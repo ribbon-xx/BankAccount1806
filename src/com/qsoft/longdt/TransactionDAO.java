@@ -17,7 +17,7 @@ public class TransactionDAO {
 		return null;
 	}
 
-	public ArrayList<TransactionDTO> getLastTransactionDao(String string) {
+	public ArrayList<TransactionDTO> getLimitTransactionDao(String string, int limit) {
 		return null;
 	}
 }
