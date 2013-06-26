@@ -10,11 +10,15 @@ public class BankAccountDAO {
 		return null;
 	}
 
-	public BankAccountDTO doUpdate(TransactionDTO dto) {
+	public BankAccountDTO doUpdate(BankAccountDTO dto) {
 		return null;
 	}
 
 	public void doDelete() {
 		return;
+	}
+
+	public BankAccountDTO getAccountByNumber(String accountNumber) {
+		return null;
 	}
 }

@@ -1,44 +1,48 @@
 package com.qsoft.longdt;
 
-import java.util.Calendar;
-
 public class BankAccount {
 
 	private BankAccountDAO baDAO;
 
-	public BankAccount(BankAccountDAO baDAO) {
+	public BankAccountDTO openAccount(String accountNumber) {
+		BankAccountDTO accountDTO = new BankAccountDTO(accountNumber);
+		baDAO.doCreate(accountDTO);
+		return accountDTO;
+	}
+
+	public BankAccount(BankAccountDAO bankAccountDAO) {
 		super();
-		this.baDAO = baDAO;
+		baDAO = bankAccountDAO;
 	}
 
-	public BankAccountDTO openAccount(String accountNumber, double balance) {
-		BankAccountDTO bankAccountDTO = new BankAccountDTO();
-		bankAccountDTO.setAccountNumber(accountNumber);
-		bankAccountDTO.setBalance(balance);
-		baDAO.doCreate(bankAccountDTO);
-		return bankAccountDTO;
+	public void setBankAccountDAO(BankAccountDAO BankAccountDAO) {
+		this.baDAO = BankAccountDAO;
 	}
 
-	public BankAccountDTO getAccount(String accountNumber) {
-		BankAccountDTO bankAccountDTO = new BankAccountDTO();
-		bankAccountDTO = baDAO.doRead(accountNumber);
-		return bankAccountDTO;
+	public BankAccountDTO getAccountByNumber(String accountNumber) {
+		return baDAO.getAccountByNumber(accountNumber);
 	}
 
-	public BankAccountDTO deposit(String accountNumber, long amount,
+	public void deposite(BankAccountDTO accountDTO, float amount,
 			String description) {
-		BankAccountDTO baDTO = getAccount(accountNumber);
-		TransactionDTO tranDTO = new TransactionDTO(baDTO.getAccountNumber(),
-				baDTO.getBalance() + amount, description, Calendar
-						.getInstance().getTimeInMillis());
-		return baDAO.doUpdate(tranDTO);
+		accountDTO.setBalance(accountDTO.getBalance() + amount);
+		accountDTO.setDescription(description);
+		baDAO.doUpdate(accountDTO);
 	}
 
-	public BankAccountDTO withdraw(String accountNumber, long amount,
-			String description) {
-		// TransactionDTO tranDTO = new TransactionDTO(accountNumber, amount,
-		// description, Calendar.getInstance().getTimeInMillis());
-		return baDAO.doUpdate(new TransactionDTO(accountNumber, amount,
-				description, Calendar.getInstance().getTimeInMillis()));
+	public void deposite(BankAccountDTO accountDTO, float amount,
+			String description, long timeStamp) {
+		accountDTO.setBalance(accountDTO.getBalance() + amount);
+		accountDTO.setDescription(description);
+		accountDTO.setOpenTimestamp(timeStamp);
+		baDAO.doUpdate(accountDTO);
+	}
+
+	public void withDraw(BankAccountDTO accountDTO, float amount,
+			String description, long timeStamp) {
+		accountDTO.setBalance(accountDTO.getBalance() - amount);
+		accountDTO.setDescription(description);
+		accountDTO.setOpenTimestamp(timeStamp);
+		baDAO.doUpdate(accountDTO);
 	}
 }
