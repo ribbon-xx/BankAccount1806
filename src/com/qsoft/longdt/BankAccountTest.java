@@ -4,6 +4,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Calendar;
+
 import junit.framework.TestCase;
 
 import org.junit.Test;
@@ -17,12 +21,14 @@ public class BankAccountTest extends TestCase {
 	private BankAccountDAO baDAO;
 	private TransactionDAO tDAO;
 	private String accNumber;
+	private Calendar mockCal;
 
 	@Override
 	protected void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
 		baDAO = mock(BankAccountDAO.class);
 		tDAO = mock(TransactionDAO.class);
+		mockCal = mock(Calendar.class);
 		ba = new BankAccount();
 		ba.setBankAccountDAO(baDAO);
 		ba.settDAO(tDAO);
@@ -140,5 +146,17 @@ public class BankAccountTest extends TestCase {
 	public void testGetHistoryWithLimitedNumber() {
 		trans.getLimitTransactions(accNumber, 5);
 		verify(tDAO, times(1)).getLimitTransactionDao(accNumber, 5);
+	}
+
+	@Test
+	public void testSaveTimestampWhenOpenAccount() {
+		ArgumentCaptor<BankAccountDTO> argBADTO = ArgumentCaptor
+				.forClass(BankAccountDTO.class);
+		ba.openAccount(accNumber);
+		Long timeStamp = System.currentTimeMillis();
+		when(mockCal.getTimeInMillis()).thenReturn(timeStamp);		
+		verify(baDAO, times(1)).doCreate(argBADTO.capture());
+		assertTrue(argBADTO.getValue().getOpenTimestamp() != null);
+		assertEquals(timeStamp, argBADTO.getValue().getOpenTimestamp());
 	}
 }

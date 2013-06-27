@@ -4,7 +4,7 @@ public class BankAccountDTO {
 
 	private String accountNumber;
 	private float balance;
-	private long openTimestamp;
+	private Long openTimestamp;
 	private String description;
 
 	public BankAccountDTO(String accountNumber) {
@@ -28,11 +28,11 @@ public class BankAccountDTO {
 		this.balance = balance;
 	}
 
-	public long getOpenTimestamp() {
+	public Long getOpenTimestamp() {
 		return openTimestamp;
 	}
 
-	public void setOpenTimestamp(long openTimestamp) {
+	public void setOpenTimestamp(Long openTimestamp) {
 		this.openTimestamp = openTimestamp;
 	}
 

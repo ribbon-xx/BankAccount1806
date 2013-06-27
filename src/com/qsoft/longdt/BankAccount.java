@@ -7,6 +7,8 @@ public class BankAccount {
 
 	public BankAccountDTO openAccount(String accountNumber) {
 		BankAccountDTO accountDTO = new BankAccountDTO(accountNumber);
+		accountDTO.setBalance(0);
+		accountDTO.setOpenTimestamp(System.currentTimeMillis());
 		baDAO.doCreate(accountDTO);
 		return accountDTO;
 	}
